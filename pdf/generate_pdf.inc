@@ -168,7 +168,7 @@ function generate_lm_pdf()
 							} //!feof($fp)
 						fclose($fp);
 						unlink($file);
-						#drupal_goto('lab_migration/certificate');
+						//drupal_goto('lab_migration/certificate');
 						return;
 					} //$data3->type = 'Proposer'
 				elseif ($data3->type == 'Participant')
@@ -324,7 +324,7 @@ function generate_lm_pdf()
 							} //!feof($fp)
 						fclose($fp);
 						unlink($file);
-						#drupal_goto('lab_migration/certificate');
+						//drupal_goto('lab_migration/certificate');
 						return;
 					} //$data3->type = 'Proposer'
 				else
