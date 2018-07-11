@@ -1,0 +1,636 @@
+<?php
+// $Id$
+/*
+ * Implementation of hook_menu().
+ */
+function migration_certificates_menu()
+	{
+		$items = array();
+		$items['lab_migration/certificate'] = array(
+				'title' => 'List Of All Certificates LM',
+				'description' => 'List of all available lab migration certificates',
+				'page callback' => '_list_all_lm_certificates',
+				'access arguments' => array(
+						'Create custom Certificate'
+				)
+		);
+		$items['lab_migration/certificate/lm_proposer/form'] = array(
+				'title' => 'Create Certificate',
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array(
+						'lab_migration_certificate_form'
+				),
+				'access arguments' => array(
+						'Create custom Certificate'
+				)
+		);
+		$items['lab_migration/certificate/lm_proposer/form/edit'] = array(
+				'title' => 'Edit Proposer Certificate',
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array(
+						'lab_migration_certificate_edit_form'
+				),
+				'access arguments' => array(
+						'Create custom Certificate'
+				)
+		);
+		$items['lab_migration/certificate/lm_participation/form'] = array(
+				'title' => 'Create Certificates for Participation',
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array(
+						'lab_migration_certificate_participation_form'
+				),
+				'access arguments' => array(
+						'Create custom Certificate'
+				)
+		);
+		$items['lab_migration/certificate/lm_participation/form/edit'] = array(
+				'title' => 'Edit Certificates for Participation',
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array(
+						'lab_migration_certificate_participation_edit_form'
+				),
+				'access arguments' => array(
+						'Create custom Certificate'
+				)
+		);
+		$items['lab_migration/certificate/generate_pdf'] = array(
+				'title' => 'Download Certificate',
+				'description' => 'Download Certificate',
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array(
+						'generate_lm_pdf'
+				),
+				'access arguments' => array(
+						'Create custom Certificate'
+				),
+				'file' => 'pdf/generate_pdf.inc'
+		);
+		$items["lab_migration/certificates/verify"] = array(
+				"title" => "Lab Migration Certificate Verification",
+				"page callback" => "verify_lab_migration_certificates",
+				"access arguments" => array(
+						"Verify custom Certificate of lab"
+				),
+				'file' => 'pdf/verify_lab_migration_certificates.inc'
+		);
+		/**************************************************************/
+		$items['m_tbc/certificate/tbc_participation/form'] = array(
+				'title' => 'Create Certificates for Participation',
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array(
+						'm_tbc_certificate_participation_form'
+				),
+				'access arguments' => array(
+						'Create custom Certificate'
+				),
+				'file' => 'pdf/m_tbc_certi.inc'
+		);
+		$items['m_tbc/certificate'] = array(
+				'title' => 'List Of All Certificates Manual TBC ',
+				'description' => 'List of all available TBC praticipation certificates',
+				'page callback' => '_list_all_m_tbc_certificates',
+				'access arguments' => array(
+						'Create custom Certificate'
+				),
+				'file' => 'pdf/m_tbc_certi.inc'
+		);
+		$items['m_tbc/certificate/tbc_participation/form/edit'] = array(
+				'title' => 'Edit Certificates for Participation',
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array(
+						'm_tbc_certificate_participation_edit_form'
+				),
+				'access arguments' => array(
+						'Create custom Certificate'
+				)
+		);
+		$items['m_tbc/certificate/generate_pdf'] = array(
+				'title' => 'Download Certificate',
+				'description' => 'Download Certificate',
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array(
+						'generate_tbc_pdf'
+				),
+				'access arguments' => array(
+						'Create custom Certificate'
+				),
+				'file' => 'pdf/m_tbc_generate_pdf.inc'
+		);
+		$items["m_tbc/certificates/verify"] = array(
+				"title" => "TBC Certificate Verification",
+				"page callback" => "verify_m_tbc_certificates",
+				"access arguments" => array(
+						"Verify custom Certificate of lab"
+				),
+				'file' => 'pdf/verify_m_tbc_certificates.inc'
+		);
+		return $items;
+	}
+/**
+ * Implementation of hook_perm().
+ */
+function migration_certificates_permission()
+	{
+		return array(
+				"Create custom Certificate" => array(
+						"title" => t("create custom certificate "),
+						"description" => t("Create custom Certificate")
+				),
+				"Verify custom Certificate of lab" => array(
+						"title" => t("Verify custom Certificate of lab"),
+						"description" => t("Verify custom Certificate of lab")
+				)
+		);
+	}
+/********** Lab migration certificate form **************/
+function lab_migration_certificate_form($form, $form_state)
+	{
+		$form['name_title'] = array(
+				'#type' => 'select',
+				'#title' => t('Title'),
+				'#options' => array(
+						'Dr.' => 'Dr.',
+						'Prof.' => 'Prof.',
+						'Mr.' => 'Mr.',
+						'Mrs.' => 'Mrs.',
+						'Ms.' => 'Ms.'
+				),
+				'#required' => TRUE
+		);
+		$form['name'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Name of Proposer'),
+				'#maxlength' => 50,
+				'#required' => TRUE
+		);
+		$form['email_id'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Email'),
+				'#size' => 50
+		);
+		$form['institute_name'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Collage / Institue Name'),
+				'#required' => TRUE
+		);
+		$form['institute_address'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Collage / Institue address'),
+				'#required' => TRUE
+		);
+		$form['lab_name'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Lab name'),
+				'#required' => TRUE
+		);
+		$form['department'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Department'),
+				'#required' => TRUE
+		);
+		$form['semester_details'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Semester details'),
+				'#required' => TRUE
+		);
+		$form['proposal_id'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Lab Proposal Id'),
+				'#description' => 'Note: You can find  the respective Lab Proposal Id from the url for the  completed lab. For example: The Lab Proposal Id is 64 for this completed lab. ( Url - scilab.in/lab_migration_run/64)',
+				'#required' => TRUE
+		);
+		$form['submit'] = array(
+				'#type' => 'submit',
+				'#value' => t('Submit')
+		);
+		return $form;
+	}
+function lab_migration_certificate_form_submit($form, &$form_state)
+	{
+		global $user;
+		$v = $form_state["values"];
+		$result = "INSERT INTO {lab_migration_certificate} 
+    (uid, name_title, name, email_id, institute_name, institute_address, lab_name, department, semester_details,proposal_id,type,creation_date) VALUES
+    (:uid, :name_title, :name, :email_id, :institute_name, :institute_address, :lab_name, :department, :semester_details,:proposal_id,:type,:creation_date)";
+		$args = array(
+				":uid" => $user->uid,
+				":name_title" => trim($v['name_title']),
+				":name" => trim($v['name']),
+				":email_id" => trim($v['email_id']),
+				":institute_name" => trim($v['institute_name']),
+				":institute_address" => trim($v['institute_address']),
+				":lab_name" => trim($v['lab_name']),
+				":department" => trim($v['department']),
+				":semester_details" => trim($v['semester_details']),
+				":proposal_id" => trim($v['proposal_id']),
+				":type" => "Proposer",
+				":creation_date" => time()
+		);
+		$proposal_id = db_query($result, $args);
+		drupal_goto('lab_migration/certificate');
+	}
+/********** Lab migration certificate form **************/
+function lab_migration_certificate_edit_form($form, $form_state)
+	{
+		$type = arg(2);
+		$action = arg(4);
+		$proposal_id = arg(5);
+		$certi_id = arg(6);
+		//var_dump($type. "--".$action."--".$proposal_id."--".$certi_id);
+		//die;
+		if ($type == "lm_proposer" && $action == "edit")
+			{
+				$query = db_query("SELECT * FROM lab_migration_certificate WHERE proposal_id=:prop_id AND id=:certi_id", array(
+						":prop_id" => $proposal_id,
+						":certi_id" => $certi_id
+				));
+				$details_list = $query->fetchobject();
+				if ($details_list->type == "Proposer")
+					{
+						$form['name_title'] = array(
+								'#type' => 'select',
+								'#title' => t('Title'),
+								'#options' => array(
+										'Dr.' => 'Dr.',
+										'Prof.' => 'Prof.',
+										'Mr.' => 'Mr.',
+										'Mrs.' => 'Mrs.',
+										'Ms.' => 'Ms.'
+								),
+								'#default_value' => $details_list->name_title
+						);
+						$form['name'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Name of Proposer'),
+								'#maxlength' => 50,
+								'#default_value' => $details_list->name
+						);
+						$form['email_id'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Email'),
+								'#size' => 50,
+								'#default_value' => $details_list->email_id
+						);
+						$form['institute_name'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Collage / Institue Name'),
+								'#default_value' => $details_list->institute_name
+						);
+						$form['institute_address'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Collage / Institue address'),
+								'#default_value' => $details_list->institute_address
+						);
+						$form['lab_name'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Lab name'),
+								'#default_value' => $details_list->lab_name
+						);
+						$form['department'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Department'),
+								'#default_value' => $details_list->department
+						);
+						$form['semester_details'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Semester details'),
+								'#default_value' => $details_list->semester_details
+						);
+						$form['proposal_id'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Lab Proposal Id'),
+								'#description' => 'Note: You can find it in respective completed labs url -> scilab.in/lab_migration_run/64 <- this number is the proposal id for respective lab',
+								'#default_value' => $details_list->proposal_id
+						);
+						$form['certi_id'] = array(
+								'#type' => 'hidden',
+								'#default_value' => $details_list->id
+						);
+						$form['submit'] = array(
+								'#type' => 'submit',
+								'#value' => t('Submit')
+						);
+					} //$details_list->type == "Proposer"
+				else
+					{
+						$form['err_message'] = array(
+								'#type' => 'item',
+								'#title' => t('Message'),
+								'#markup' => 'Invalid information'
+						);
+					}
+			} //$type == "lm_proposer" && $action == "edit"
+		else
+			{
+				$form['err_message'] = array(
+						'#type' => 'item',
+						'#title' => t('Message'),
+						'#markup' => 'Invalid information'
+				);
+			}
+		return $form;
+	}
+function lab_migration_certificate_edit_form_submit($form, &$form_state)
+	{
+		global $user;
+		$v = $form_state["values"];
+		$result = "UPDATE lab_migration_certificate SET
+    uid=:uid, 
+    name_title=:name_title, 
+    name=:name, 
+    email_id=:email_id, 
+    institute_name=:institute_name, 
+    institute_address=:institute_address, 
+    lab_name=:lab_name, 
+    department=:department, 
+    semester_details=:semester_details,
+    proposal_id=:proposal_id,
+    type=:type,
+    creation_date=:creation_date
+    WHERE id=:certi_id";
+		$args = array(
+				":uid" => $user->uid,
+				":name_title" => trim($v['name_title']),
+				":name" => trim($v['name']),
+				":email_id" => trim($v['email_id']),
+				":institute_name" => trim($v['institute_name']),
+				":institute_address" => trim($v['institute_address']),
+				":lab_name" => trim($v['lab_name']),
+				":department" => trim($v['department']),
+				":semester_details" => trim($v['semester_details']),
+				":proposal_id" => trim($v['proposal_id']),
+				":type" => "Proposer",
+				":creation_date" => time(),
+				":certi_id" => $v['certi_id']
+		);
+		$proposal_id = db_query($result, $args);
+		drupal_goto('lab_migration/certificate');
+	}
+function lab_migration_certificate_participation_form($form, $form_state)
+	{
+		$form['name_title'] = array(
+				'#type' => 'select',
+				'#title' => t('Title'),
+				'#options' => array(
+						'Dr.' => 'Dr.',
+						'Prof.' => 'Prof.',
+						'Mr.' => 'Mr.',
+						'Mrs.' => 'Mrs.',
+						'Ms.' => 'Ms.'
+				),
+				'#required' => TRUE
+		);
+		$form['name'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Name of Participant'),
+				'#maxlength' => 50,
+				'#required' => TRUE
+		);
+		$form['email_id'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Email'),
+				'#size' => 50,
+				'#default_value' => 'Not availbale'
+		);
+		$form['institute_name'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Collage / Institue Name'),
+				'#required' => TRUE
+		);
+		$form['institute_address'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Collage / Institue address'),
+				'#required' => TRUE
+		);
+		$form['lab_name'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Lab name'),
+				'#required' => TRUE
+		);
+		$form['department'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Department'),
+				'#required' => TRUE
+		);
+		$form['semester_details'] = array(              
+				'#type' => 'textfield',
+				'#title' => t('Semester details'),
+				'#required' => TRUE
+                );
+		$form['proposal_id'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Lab Proposal Id'),
+				'#description' => 'Note: You can find  the respective Lab Proposal Id from the url for the  completed lab. For example: The Lab Proposal Id is 64 for this completed lab. ( Url - scilab.in/lab_migration_run/64)',
+				'#required' => TRUE
+		);
+		$form['submit'] = array(
+				'#type' => 'submit',
+				'#value' => t('Submit')
+		);
+		return $form;
+	}
+function lab_migration_certificate_participation_form_submit($form, &$form_state)
+	{
+		global $user;
+		$v = $form_state["values"];
+		$result = "INSERT INTO {lab_migration_certificate} 
+    (uid, name_title, name, email_id, institute_name, institute_address, lab_name, department, semester_details,proposal_id,type,creation_date) VALUES
+    (:uid, :name_title, :name, :email_id, :institute_name, :institute_address, :lab_name, :department, :semester_details,:proposal_id,:type,:creation_date)";
+		$args = array(
+				":uid" => $user->uid,
+				":name_title" => trim($v['name_title']),
+				":name" => trim($v['name']),
+				":email_id" => trim($v['email_id']),
+				":institute_name" => trim($v['institute_name']),
+				":institute_address" => trim($v['institute_address']),
+				":lab_name" => trim($v['lab_name']),
+				":department" => trim($v['department']),
+				":semester_details" => trim($v['semester_details']),
+				":proposal_id" => $v['proposal_id'],
+				":type" => "Participant",
+				":creation_date" => time()
+		);
+		$proposal_id = db_query($result, $args);
+		drupal_goto('lab_migration/certificate');
+	}
+/******** edit participation *********/
+function lab_migration_certificate_participation_edit_form($form, $form_state)
+	{
+		$type = arg(2);
+		$action = arg(4);
+		$proposal_id = arg(5);
+		$certi_id = arg(6);
+		if ($type == "lm_participation" && $action == "edit")
+			{
+				$query = db_query("SELECT * FROM lab_migration_certificate WHERE proposal_id=:prop_id AND id=:certi_id", array(
+						":prop_id" => $proposal_id,
+						":certi_id" => $certi_id
+				));
+				$details_list = $query->fetchobject();
+				if ($details_list->type == "Participant")
+					{
+						$form['name_title'] = array(
+								'#type' => 'select',
+								'#title' => t('Title'),
+								'#options' => array(
+										'Dr.' => 'Dr.',
+										'Prof.' => 'Prof.',
+										'Mr.' => 'Mr.',
+										'Mrs.' => 'Mrs.',
+										'Ms.'=> 'Ms.'
+								),
+								'#default_value' => $details_list->name_title
+						);
+						$form['name'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Name of Participant'),
+								'#maxlength' => 50,
+								'#default_value' => $details_list->name
+						);
+						$form['email_id'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Email'),
+								'#size' => 50,
+								'#default_value' => $details_list->email_id
+						);
+						$form['institute_name'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Collage / Institue Name'),
+								'#default_value' => $details_list->institute_name
+						);
+						$form['institute_address'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Collage / Institue address'),
+								'#default_value' => $details_list->institute_address
+						);
+						$form['lab_name'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Lab name'),
+								'#default_value' => $details_list->lab_name
+						);
+						$form['department'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Department'),
+								'#default_value' => $details_list->department
+						);
+						$form['semester_details'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Semester details'),
+								'#default_value' => $details_list->semester_details
+						);
+						$form['proposal_id'] = array(
+								'#type' => 'textfield',
+								'#title' => t('Lab Proposal Id'),
+								'#description' => 'Note: You can find  the respective Lab Proposal Id from the url for the  completed lab. For example: The Lab Proposal Id is 64 for this completed lab. ( Url - scilab.in/lab_migration_run/64)',
+								'#default_value' => $details_list->proposal_id
+						);
+						$form['certi_id'] = array(
+								'#type' => 'hidden',
+								'#default_value' => $details_list->id
+						);
+						$form['submit'] = array(
+								'#type' => 'submit',
+								'#value' => t('Submit')
+						);
+					} //$details_list->type == "Participant"
+				else
+					{
+						$form['err_message'] = array(
+								'#type' => 'item',
+								'#title' => t('Message'),
+								'#markup' => 'Invalid information'
+						);
+					}
+			} //$type == "lm_participation" && $action == "edit"
+		else
+			{
+				$form['err_message'] = array(
+						'#type' => 'item',
+						'#title' => t('Message'),
+						'#markup' => 'Invalid information'
+				);
+			}
+		return $form;
+	}
+function lab_migration_certificate_participation_edit_form_submit($form, &$form_state)
+	{
+		global $user;
+		$v = $form_state["values"];
+		$result = "UPDATE lab_migration_certificate SET
+    uid=:uid, 
+    name_title=:name_title, 
+    name=:name, 
+    email_id=:email_id, 
+    institute_name=:institute_name, 
+    institute_address=:institute_address, 
+    lab_name=:lab_name, 
+    department=:department, 
+    semester_details=:semester_details,
+    proposal_id=:proposal_id,
+    type=:type,
+    creation_date=:creation_date
+    WHERE id=:certi_id";
+		$args = array(
+				":uid" => $user->uid,
+				":name_title" => trim($v['name_title']),
+				":name" => trim($v['name']),
+				":email_id" => trim($v['email_id']),
+				":institute_name" => trim($v['institute_name']),
+				":institute_address" => trim($v['institute_address']),
+				":lab_name" => trim($v['lab_name']),
+				":department" => trim($v['department']),
+				":semester_details" => trim($v['semester_details']),
+				":proposal_id" => trim($v['proposal_id']),
+				":type" => "Participant",
+				":creation_date" => time(),
+				":certi_id" => $v['certi_id']
+		);
+		$proposal_id = db_query($result, $args);
+		drupal_goto('lab_migration/certificate');
+	}
+/*************************************/
+function _list_all_lm_certificates()
+	{
+		$query = db_query("SELECT * FROM lab_migration_certificate");
+		$search_rows = array();
+		$output = '';
+		$details_list = $query->fetchAll();
+		foreach ($details_list as $details)
+			{
+				if ($details->type == "Proposer")
+					{
+						$search_rows[] = array(
+								$details->lab_name,
+								$details->institute_name,
+								$details->name,
+								$details->type,
+								l('Download Certificate', 'lab_migration/certificate/generate_pdf/' . $details->proposal_id . '/' . $details->id),
+								l('Edit Certificate', 'lab_migration/certificate/lm_proposer/form/edit/' . $details->proposal_id . '/' . $details->id)
+						);
+					} //$details->type == "Proposer"
+				else
+					{
+						$search_rows[] = array(
+								$details->lab_name,
+								$details->institute_name,
+								$details->name,
+								$details->type,
+								l('Download Certificate', 'lab_migration/certificate/generate_pdf/' . $details->proposal_id . '/' . $details->id),
+								l('Edit Certificate', 'lab_migration/certificate/lm_participation/form/edit/' . $details->proposal_id . '/' . $details->id)
+						);
+					}
+			} //$details_list as $details
+		$search_header = array(
+				'Lab Name',
+				'Institute name',
+				'Name',
+				'Type',
+				'Download Certificates'
+		);
+		$output .= theme('table', array(
+				'header' => $search_header,
+				'rows' => $search_rows
+		));
+		return $output;
+	}

@@ -1,0 +1,6 @@
+name = Migration Certificates
+description = IIT Bombay Textbook Companion and Lab Migration project
+package = IITB
+version = VERSION
+core = 7.x
+
