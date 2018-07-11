@@ -170,7 +170,7 @@ function generate_tbc_pdf()
 							} //!feof($fp)
 						fclose($fp);
 						unlink($file);
-						drupal_goto('m_tbc/certificate');
+						//drupal_goto('m_tbc/certificate');
 						return;
 					} //$data3->type = 'Proposer'
 				elseif ($data3->type == 'Participant')
@@ -330,7 +330,7 @@ function generate_tbc_pdf()
 							} //!feof($fp)
 						fclose($fp);
 						unlink($file);
-						drupal_goto('m_tbc/certificate');
+						//drupal_goto('m_tbc/certificate');
 						return;
 					} //$data3->type = 'Proposer'
 				else
