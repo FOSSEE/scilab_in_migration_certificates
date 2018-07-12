@@ -40,11 +40,11 @@ function m_tbc_certificate_participation_form($form, &$form_state)
 				'#title' => t('Book name'),
 				'#required' => TRUE
 		);
-		$form['author'] = array(              
+		$form['author'] = array(
 				'#type' => 'textfield',
 				'#title' => t('author'),
 				'#required' => True
-                );
+		);
 		$form['department'] = array(
 				'#type' => 'textfield',
 				'#title' => t('Department'),

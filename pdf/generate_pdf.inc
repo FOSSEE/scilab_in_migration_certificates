@@ -25,6 +25,8 @@ function generate_lm_pdf()
 								echo "Error!";
 							} //!$pdf
 						$pdf->AddPage();
+						$image_bg = $mpath . "/pdf/images/bg.png";
+						$pdf->Image($image_bg, 0, 0, $pdf->w, $pdf->h);
 						$pdf->Rect(5, 5, 267, 207, 'D'); //For A4
 						$pdf->SetMargins(18, 1, 18);
 						$pdf->Line(7.0, 7.0, 270.0, 7.0);
@@ -36,22 +38,22 @@ function generate_lm_pdf()
 						$pdf->Ln(15);
 						$pdf->Cell(200, 8, $pdf->Image($image1, 100, 19, 0, 28), 0, 1, 'C');
 						$pdf->Ln(25);
-						$pdf->SetFont('Arial', 'BI', 25);
+						$pdf->SetFont('Times', 'BI', 25);
 						$pdf->SetTextColor(139, 69, 19);
 						$pdf->Cell(240, 8, 'Certificate of Lab Migration', '0', 1, 'C');
 						$pdf->Ln(4);
-						$pdf->SetFont('Arial', 'BI', 12);
+						$pdf->SetFont('Times', 'BI', 12);
 						$pdf->SetTextColor(0, 0, 0);
 						$pdf->Cell(240, 8, 'This is to certify that under the supervision/guidance of ' . $data3->name_title . ' ' . $data3->name . ',', '0', 1, 'C');
 						$pdf->SetTextColor(139, 69, 19);
 						$pdf->Ln(2);
 						$pdf->Cell(240, 8, 'from the ' . $data3->department . ',', '0', 1, 'C');
 						$pdf->Ln(0);
-						$pdf->SetFont('Arial', 'BI', 12);
+						$pdf->SetFont('Times', 'BI', 12);
 						$pdf->SetTextColor(139, 69, 19);
 						$pdf->Cell(240, 8, $data3->institute_name . ', ' . $data3->institute_address, '0', '1', 'C');
 						$pdf->Ln(2);
-						$pdf->SetFont('Arial', 'BI', 12);
+						$pdf->SetFont('Times', 'BI', 12);
 						$pdf->SetTextColor(0, 0, 0);
 						$pdf->Cell(240, 8, ' has successfully migrated the ', '0', '1', 'C');
 						$pdf->Ln(0);
@@ -128,14 +130,14 @@ function generate_lm_pdf()
 						$sign = $path . "/pdf/images/kannan-sign.png";
 						$pdf->Image($sign, $pdf->GetX(), $pdf->GetY() - 10, 50, 0);
 						//$pdf->Cell(0,7,'', 0,1,'L');
-						$pdf->SetFont('Arial', 'I', 12);
+						$pdf->SetFont('Times', 'I', 12);
 						$pdf->Cell(0, 8, 'Prof. Kannan Moudgalya', 0, 1, 'L');
 						$pdf->SetX(194);
 						$pdf->Cell(0, 7, 'Principal Investigator - FOSSEE', 0, 1, 'L');
 						$pdf->SetX(190);
 						$pdf->Cell(0, 7, ' Dept. of Chemical Engg., IIT Bombay.', 0, 1, 'L');
 						$pdf->SetX(29);
-						$pdf->SetFont('Arial', 'B', 10);
+						$pdf->SetFont('Times', 'B', 10);
 						$pdf->Cell(0, 2, $UniqueString, 0, 0, 'C');
 						//$image4=$path."/pdf/images/verify_content.png";
 						//$pdf->Image($image4, $pdf->GetX(), $pdf->GetY(),20, 0);
@@ -148,7 +150,7 @@ function generate_lm_pdf()
 						$pdf->Image($image3, $pdf->GetX() + 110, $pdf->GetY() + 3, 15, 0);
 						$image4 = $path . "/pdf/images/verify_content.png";
 						$pdf->Image($image4, $pdf->GetX() - 15, $pdf->GetY() + 28, 150, 0);
-						$pdf->SetFont('Arial', 'I', 8);
+						$pdf->SetFont('Times', 'I', 8);
 						$pdf->SetTextColor(0, 0, 0);
 						$filename = str_replace(' ', '-', $data3->proposal_id) . '-Scilab-Lab-migration-Certificate.pdf';
 						$file = $path . '/pdf/temp_certificate/' . $proposal_id . '_' . $filename;
@@ -179,6 +181,8 @@ function generate_lm_pdf()
 								echo "Error!";
 							} //!$pdf
 						$pdf->AddPage();
+						$image_bg = $mpath . "/pdf/images/bg.png";
+						$pdf->Image($image_bg, 0, 0, $pdf->w, $pdf->h);
 						$pdf->Rect(5, 5, 267, 207, 'D'); //For A4
 						$pdf->SetMargins(18, 1, 18);
 						$pdf->Line(7.0, 7.0, 270.0, 7.0);
@@ -190,19 +194,19 @@ function generate_lm_pdf()
 						$pdf->Ln(15);
 						$pdf->Cell(200, 8, $pdf->Image($image1, 100, 19, 0, 28), 0, 1, 'C');
 						$pdf->Ln(25);
-						$pdf->SetFont('Arial', 'BI', 25);
+						$pdf->SetFont('Times', 'BI', 25);
 						$pdf->SetTextColor(139, 69, 19);
 						$pdf->Cell(240, 8, 'Certificate of Participation', '0', 1, 'C');
 						$pdf->Ln(3);
-						$pdf->SetFont('Arial', 'BI', 12);
+						$pdf->SetFont('Times', 'BI', 12);
 						$pdf->SetTextColor(0, 0, 0);
 						$pdf->Cell(240, 8, 'This is to certify that', '0', '1', 'C');
 						$pdf->Ln(4);
-						$pdf->SetFont('Arial', 'BI', 20);
+						$pdf->SetFont('Times', 'BI', 20);
 						$pdf->SetTextColor(139, 69, 19);
 						$pdf->Cell(240, 8, $data3->name_title . ' ' . $data3->name, '0', 1, 'C');
 						$pdf->Ln(5);
-						$pdf->SetFont('Arial', 'I', 12);
+						$pdf->SetFont('Times', 'I', 12);
 						$pdf->SetTextColor(0, 0, 0);
 						$pdf->Cell(240, 8, 'from the Department of ' . $data3->department . ', ', '0', '1', 'C');
 						$pdf->Ln(0);
@@ -285,14 +289,14 @@ function generate_lm_pdf()
 						$sign = $path . "/pdf/images/kannan-sign.png";
 						$pdf->Image($sign, $pdf->GetX(), $pdf->GetY() - 10, 50, 0);
 						//$pdf->Cell(0,7,'', 0,1,'L');
-						$pdf->SetFont('Arial', 'I', 12);
+						$pdf->SetFont('Times', 'I', 12);
 						$pdf->Cell(0, 8, 'Prof. Kannan Moudgalya', 0, 1, 'L');
 						$pdf->SetX(194);
 						$pdf->Cell(0, 7, 'Principal Investigator - FOSSEE', 0, 1, 'L');
 						$pdf->SetX(190);
 						$pdf->Cell(0, 7, ' Dept. of Chemical Engg., IIT Bombay.', 0, 1, 'L');
 						$pdf->SetX(29);
-						$pdf->SetFont('Arial', 'B', 10);
+						$pdf->SetFont('Times', 'B', 10);
 						$pdf->Cell(0, 2, $UniqueString, 0, 0, 'C');
 						$pdf->SetY(-40);
 						$pdf->SetX(80);
@@ -304,7 +308,7 @@ function generate_lm_pdf()
 						$image4 = $path . "/pdf/images/verify_content.png";
 						//$pdf->Image($image4, $pdf->GetX(), $pdf->GetY(),0, 10);
 						$pdf->Image($image4, $pdf->GetX() - 15, $pdf->GetY() + 28, 150, 0);
-						$pdf->SetFont('Arial', 'I', 8);
+						$pdf->SetFont('Times', 'I', 8);
 						$pdf->SetTextColor(0, 0, 0);
 						$filename = str_replace(' ', '-', $data3->id) . '-Scilab-Lab-migration-Participation-Certificate.pdf';
 						$file = $path . '/pdf/temp_certificate/' . $proposal_id . '_' . $filename;
